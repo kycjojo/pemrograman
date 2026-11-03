@@ -1,6 +1,6 @@
-# Panduan Penyelesaian (Level Up): Dekomposisi & Penjelasan Tiap Gerakan
+# Panduan Penyelesaian: Metode Dekomposisi & Penjelasan Tiap Gerakan
 
-Dokumen ini adalah panduan berpikir untuk menaklukkan setiap soal pada [latihan_soal_array_string.md](./latihan_soal_array_string.md) **tanpa membocorkan kode jadi**. Setiap soal dibedah melalui 4 kacamata: **Apa Keinginan Soal**, **Dekomposisi (Pecah Masalah)**, **Urutan Langkah Kerja**, dan **Penjelasan Tiap Gerakan di Memori**.
+Dokumen ini adalah pasangan langsung dari [latihan_soal_array_string.md](./latihan_soal_array_string.md). Di sini **sengaja tidak diberikan kode program yang sudah selesai**, melainkan panduan cara berpikir: membedah keinginan soal, memecah masalah besar menjadi bagian kecil (**dekomposisi**), menyusun urutan langkah, dan memahami **apa yang terjadi pada setiap gerakan di memori**.
 
 ---
 
@@ -8,98 +8,99 @@ Dokumen ini adalah panduan berpikir untuk menaklukkan setiap soal pada [latihan_
 
 ---
 
-### 🟢 Pembahasan Array 1: Validasi Skor, Posisi Juara Kembar, & Statistik
+### 🟢 Pembahasan Array 1: Rata-Rata & Skor Tertinggi Kelas
 
 #### 1. Apa yang Diinginkan Soal?
-* **Input:** Jumlah mahasiswa `n`, diikuti skor ujian tiap mahasiswa yang **wajib berada di rentang `0–100`** (angka di luar itu ditolak dan diminta ulang di tempat).
-* **Proses:** Menyimpan hanya skor yang sah, menghitung rata-rata & jumlah yang di atas rata-rata, mencari angka tertinggi, lalu melacak di nomor urut berapa saja angka tertinggi itu muncul.
-* **Output:** Rata-rata kelas, jumlah orang di atas rata-rata, nilai skor tertinggi, dan daftar nomor mahasiswa peraih skor tertinggi tersebut.
+* **Input:** Jumlah mahasiswa `n`, diikuti `n` buah bilangan bulat skor ujian.
+* **Proses:** Menyimpan semua skor ke loker array, menjumlahkan seluruhnya untuk menghitung rata-rata, dan mencari angka skor paling besar di dalam array tersebut.
+* **Output:** Deretan seluruh skor yang diinput, nilai rata-rata kelas (`2` angka belakang koma), dan nilai skor tertinggi.
 
-#### 2. Dekomposisi Masalah (Pecah Jadi 3 Fase)
-1. **Fase Pintu Penjaga Input:** `for` untuk pindah loker mahasiswa, yang di dalamnya dipasang `do-while` sebagai satpam pemeriksa syarat `0–100`.
-2. **Fase Hitung Rata-Rata & Cari Angka Tertinggi:** Menjumlahkan isi loker dan menemukan **berapa** angka tertingginya (misalnya ketahuan tertingginya `95`).
-3. **Fase Pelacakan Posisi:** Menyusuri ulang loker dari `0` s/d `n - 1` untuk mencari siapa saja yang nilainya sama dengan `tertinggi`, sekaligus siapa saja yang `> rata`.
+#### 2. Dekomposisi Masalah (Pecah Jadi 3 Tugas Kecil)
+1. **Tugas Isi & Akumulasi:** Mengisi loker `skor[0]` s/d `skor[n - 1]` sambil menambahkan angkanya ke celengan `total` dan memantau siapa yang terbesar.
+2. **Tugas Hitung Rata-Rata:** Membagi `total` dengan banyaknya data `n` secara desimal.
+3. **Tugas Cetak Ulang:** Membuka kembali loker `0` s/d `n - 1` untuk ditampilkan sebaris, lalu menampilkan hasil rata-rata dan skor tertinggi.
 
 #### 3. Urutan Langkah yang Harus Dilakukan
-1. Siapkan `#define MAKS 50`, array `skor[MAKS]`, `n`, `total = 0`, `lulus = 0`, `tertinggi`, dan `float rata`.
-2. Minta input `n`.
-3. Jalankan **Loop 1 (`i` dari `0` s/d `n - 1`)**:
-   * Di dalamnya, pasang `do-while` yang terus berputar **selama** `skor[i] < 0` atau `skor[i] > 100`. Jika salah, tampilkan pesan peringatan sebelum meminta ulang.
-   * Begitu lolos `do-while` (artinya angka sudah sah `0–100`), tambahkan ke `total`, dan perbarui `tertinggi` (ingat: saat `i == 0`, langsung jadikan patokan awal!).
-4. Hitung `rata` dari `total` dibagi `(float)n`.
-5. Jalankan **Loop 2 (`i` dari `0` s/d `n - 1`)** untuk menghitung berapa loker yang `skor[i] > rata`.
-6. Cetak `rata`, `lulus`, dan nilai `tertinggi`, lalu jalankan **Loop 3 (`i` dari `0` s/d `n - 1`)**: setiap kali melihat `skor[i] == tertinggi`, cetak nomor urutnya (`i + 1`)!
+1. Pasang `#define MAKS 50` di atas `main()`.
+2. Siapkan variabel `n`, array `skor[MAKS]`, `total = 0`, `tertinggi`, dan `float rata`.
+3. Minta user memasukkan nilai `n`.
+4. Buat **Loop 1 (`i` dari `0` s/d `n - 1`)**:
+   * Minta input dan simpan ke `skor[i]`.
+   * Tambahkan `skor[i]` ke `total`.
+   * Jika ini data pertama (`i == 0`) **ATAU** `skor[i]` lebih besar dari `tertinggi`, maka simpan `skor[i]` ke dalam `tertinggi`.
+5. Di luar *loop*, hitung `rata` dari `(float)total / n`.
+6. Buat **Loop 2 (`i` dari `0` s/d `n - 1`)** untuk mencetak semua isi `skor[i]` ke samping dipisah spasi.
+7. Cetak nilai `rata` (gunakan `%.2f`) dan nilai `tertinggi`.
 
 #### 4. Penjelasan Tiap Gerakan di Memori
-* **Gerakan Satpam `do-while` di Dalam `for`:**
-  Mengapa validasi memakai `do-while` di dalam `for`, bukan sekadar `if`? Kalau cuma `if`, setelah menegur user sekali, indeks `i` tetap lanjut maju ke mahasiswa berikutnya sehingga loker tadi terlewat! Dengan mengurungnya di dalam `do-while`, selama angkanya masih `< 0 || > 100`, jari `i` **ditahan tidak boleh pindah loker** sampai user memasukkan angka yang benar.
-* **Gerakan Mencari "Juara Kembar" (Kenapa Tidak Cukup 1 Variabel `posisi`?):**
-  Kalau kamu hanya menyimpan 1 variabel `posisiJuara`, saat ada dua orang mendapat nilai `95` (mahasiswa ke-2 dan ke-4), hanya salah satu yang tercatat! Dengan mengetahui angka `tertinggi = 95` terlebih dahulu, kamu cukup menyapu ulang array dari depan: setiap loker yang isinya `== 95` langsung dicetak nomor kursinya (`i + 1`). Mau yang juara ada 1 orang atau 10 orang, semuanya pasti tercetak!
+* **Gerakan Mengosongkan `total = 0`:**
+  Variabel yang baru dibuat di C menyimpan angka acak sisa memori lama. Wajib isi `total = 0` di awal agar penjumlahan dimulai dari nol bersih.
+* **Gerakan Menentukan `tertinggi` Sejak Loker Pertama (`i == 0`):**
+  Jangan memberi nilai awal `tertinggi = 0` atau `1` secara menebak! Dengan menjadikan loker pertama (`skor[0]`) sebagai patokan awal saat `i == 0`, programmu dijamin akurat berapa pun angka yang dimasukkan user.
+* **Gerakan Pembagian Koma (`(float)`):**
+  Karena `total` dan `n` keduanya bertipe `int`, menulis `total / n` saja akan membuang angka desimalnya! Menambahkan `(float)` di depannya memaksa C menghitung sampai ke angka di belakang koma.
 
 ---
 
-### 🟡 Pembahasan Array 2: Fungsi Peringkat & Perhitungan Median
+### 🟡 Pembahasan Array 2: Papan Peringkat dengan Fungsi
 
 #### 1. Apa yang Diinginkan Soal?
-* **Input:** Jumlah mahasiswa `n` dan skor sah `0–100`.
-* **Proses:** Memecah program ke dalam 3 fungsi (`inputValid`, `urutTurun`, `cariMedian`). Setelah array terurut menurun, fungsi `cariMedian` mengambil nilai tengah dengan membedakan perlakuan jumlah data ganjil vs genap.
-* **Output:** Papan Peringkat `1..n`, nilai Jangkauan (*Tertinggi dikurangi Terendah*), dan nilai Median.
-
-#### 2. Dekomposisi Masalah
-1. **Pekerja 1 (`inputValid`):** Memindahkan blok `for` + `do-while` dari Soal 1 ke fungsi tersendiri.
-2. **Pekerja 2 (`urutTurun`):** Mengurutkan loker dari besar ke kecil menggunakan dua jari (`i` dan `j`) serta `temp`.
-3. **Pekerja 3 (`cariMedian`):** Mengecek sisa bagi `n % 2` untuk memilih rumus tengah ganjil atau tengah genap, lalu mengembalikan hasilnya (`return`) sebagai `float`.
-
-#### 3. Urutan Langkah yang Harus Dilakukan
-1. Tulis deklarasi ketiga fungsi di atas `main()`.
-2. Di `main()`, minta `n`, lalu panggil berurutan: `inputValid(skor, n)` → `urutTurun(skor, n)`.
-3. Cetak Papan Peringkat dari indeks `0` s/d `n - 1`.
-4. Hitung Jangkauan langsung dengan mengurangi elemen paling depan (`skor[0]`) dengan elemen paling belakang (`skor[n - 1]`).
-5. Panggil `cariMedian(skor, n)`, tampung nilai kembaliannya, lalu cetak 2 angka di belakang koma.
-
-#### 4. Penjelasan Tiap Gerakan di Memori
-* **Gerakan Syarat Wajib Sebelum Median:**
-  Secara matematika, Median **hanya sah dihitung setelah data diurutkan**! Jadi pastikan di `main()` kamu memanggil `urutTurun` **sebelum** memanggil `cariMedian`.
-* **Gerakan Membidik Indeks Tengah (Ganjil vs Genap — Hati-hati Indeks Mulai dari `0`!):**
-  Coba bayangkan nomor indeks kursi di kepalamu:
-  * **Kasus `n` Ganjil (misal `n = 5`, indeksnya: `0, 1, [2], 3, 4`):**
-    Kursi tengahnya adalah indeks **`2`**. Perhatikan bahwa di bahasa C, pembagian bulat `5 / 2` hasilnya persis **`2`**! Jadi untuk `n` ganjil (`n % 2 != 0`), posisi tengahnya tepat berada di indeks **`n / 2`**.
-  * **Kasus `n` Genap (misal `n = 4`, indeksnya: `0, [1], [2], 3`):**
-    Tidak ada 1 kursi tunggal di tengah—yang berada di tengah adalah **pasangan indeks `1` dan `2`**. Perhatikan hubungannya dengan `n = 4`: `4 / 2` adalah **`2`**, dan kursi di kirinya adalah **`(4 / 2) - 1`** yaitu **`1`**! Maka ambil kedua kursi tersebut (`s[n/2 - 1]` dan `s[n/2]`), jumlahkan, lalu bagi dengan **`2.0`** (pakai `.0` agar komanya tidak hilang!).
-
----
-
-### 🔴 Pembahasan Array 3: Nilai Berbobot & Analisis Dua Arah (Array 2D)
-
-#### 1. Apa yang Diinginkan Soal?
-* **Input:** Jumlah mahasiswa `n`, serta 3 nilai ujian (Kuis, UTS, UAS) untuk masing-masing mahasiswa.
-* **Proses:** Mengolah tabel 2D `nilai[MAKS][3]` dari **dua arah berbeda**: menyamping per baris (menghitung Nilai Akhir berbobot tiap mahasiswa) dan menurun per kolom (menghitung rata-rata kelas untuk Kuis, UTS, dan UAS).
-* **Output:** Tabel lengkap berisi 3 nilai + Nilai Akhir di sisi kanan, ditutup baris rata-rata tiap komponen di bagian bawah tabel.
+* **Input:** Jumlah mahasiswa `n` dan daftar skornya.
+* **Proses:** Memindahkan tugas-tugas di `main()` ke dalam 3 fungsi pekerja (`inputSkor`, `urutTurun`, `tampilRanking`), di mana isi array disusun ulang dari terbesar ke terkecil.
+* **Output:** Daftar Peringkat 1 sampai `n`, diikuti skor tertinggi dan skor terendah.
 
 #### 2. Dekomposisi Masalah
 ```mermaid
-flowchart LR
-    T["Tabel 2D: nilai[n][3]"]
-    T --> B["Arah Baris (Kiri ke Kanan): hitungNilaiAkhir() -> simpan ke akhir[n]"]
-    T --> K["Arah Kolom (Atas ke Bawah): hitungRataKomponen() -> simpan ke rataKomponen[3]"]
+flowchart TD
+    M["main() sebagai Pengatur: Memegang skor[MAKS] dan n"]
+    M --> F1["Fungsi 1: inputSkor() - Mengisi loker"]
+    M --> F2["Fungsi 2: urutTurun() - Mengurutkan besar ke kecil"]
+    M --> F3["Fungsi 3: tampilRanking() - Mencetak Peringkat 1..n"]
 ```
 
 #### 3. Urutan Langkah yang Harus Dilakukan
-1. Siapkan `int nilai[MAKS][3]`, `float akhir[MAKS]`, dan `float rataKomponen[3]`.
-2. Buat fungsi input 2D (`i` dari `0..n-1`, `j` dari `0..2`).
-3. Buat fungsi `hitungNilaiAkhir`: cukup **1 `for` (`i` dari `0` s/d `n - 1`)**! Untuk setiap mahasiswa `i`, kalikan kolom `0` dengan `0.20`, kolom `1` dengan `0.35`, dan kolom `2` dengan `0.45`, lalu simpan jumlahnya ke `akhir[i]`.
-4. Buat fungsi `hitungRataKomponen`: balik urutan *nested loop*-nya!
-   * `for` luar adalah **kolom `j` (`0` s/d `2`)**.
-   * Nol-kan `totalKolom = 0`.
-   * `for` dalam adalah **baris `i` (`0` s/d `n - 1`)** yang menjumlahkan `nilai[i][j]` ke bawah.
-   * Simpan `totalKolom / (float)n` ke `rataKomponen[j]`.
-5. Cetak tabel mahasiswa baris demi baris, lalu setelah garis penutup tabel, cetak ketiga isi `rataKomponen[0..2]` sejajar di bawah kolom Kuis, UTS, dan UAS!
+1. Tulis 3 baris deklarasi judul fungsi di atas `main()`.
+2. Di dalam `main()`, siapkan `skor[MAKS]` dan `n`, minta input `n`, lalu panggil ketiga fungsi secara berurutan (ingat: kirim **nama array-nya saja** tanpa kurung siku `[]`!).
+3. Di bawah `main()`, buat isi `inputSkor`: pindahkan perulangan pengisian array dari Soal 1 ke sini.
+4. Buat isi `urutTurun`: gunakan *nested loop* jari kiri `i` (`0` s/d `n - 2`) dan jari kanan `j` (`i + 1` s/d `n - 1`) beserta variabel penukar `temp`.
+5. Buat isi `tampilRanking`: cetak nomor peringkat (`i + 1`) beserta nilai `s[i]`.
+6. Di akhir `main()`, cetak skor tertinggi dari loker paling depan (`skor[0]`) dan skor terendah dari loker paling belakang (`skor[n - 1]`).
 
 #### 4. Penjelasan Tiap Gerakan di Memori
-* **Gerakan Mengapa Arah Baris Tidak Butuh Loop Dalam `j`?**
-  Karena bobot tiap kolom berbeda (`20%`, `35%`, `45%`), jauh lebih bersih jika pada baris `i` kamu langsung menunjuk kolomnya secara eksplisit: `nilai[i][0]` adalah Kuis, `nilai[i][1]` adalah UTS, dan `nilai[i][2]` adalah UAS!
-* **Gerakan Membalik Kemudi Loop pada Arah Kolom (`j` di Luar, `i` di Dalam):**
-  Biasanya `i` (baris) selalu di luar dan `j` (kolom) di dalam. Namun saat mencari **rata-rata Kuis seluruh kelas**, kita ingin **diam dulu di kolom Kuis (`j = 0`)**, sementara jari `i` turun dari mahasiswa pertama sampai terakhir (`nilai[0][0] + nilai[1][0] + nilai[2][0]`). Begitu kolom Kuis beres, barulah `j` geser ke kolom UTS (`j = 1`) dan `totalKolom` di-nol-kan kembali!
+* **Gerakan Mengirim Array Tanpa `[]` (*Alias*):**
+  Saat memanggil `urutTurun(skor, n)` di `main()`, array tidak digandakan, melainkan dikirim alamat loker aslinya. Jadi ketika parameter `s[]` di dalam fungsi menukar posisi angka, isi `skor[]` di `main()` otomatis ikut berubah urutannya!
+* **Gerakan Dua Jari Pengurutan Menurun (`urutTurun`):**
+  * Jari `i` menjaga kursi di depan, jari `j` mencari ke sebelah kanannya (`j = i + 1`).
+  * Karena kita ingin **angka besar berada di depan**, kita mengecek: *"Apakah angka di kursi depan `s[i]` **lebih kecil** dari angka di kursi belakang `s[j]` (`s[i] < s[j]`)?"*
+  * Jika ya, lakukan **gerakan tukar 3 langkah** memakai `temp`: simpan `s[i]` ke `temp` → timpa `s[i]` dengan `s[j]` → isi `s[j]` dengan `temp`.
+* **Gerakan Mengambil Tertinggi & Terendah Tanpa Mencari Lagi:**
+  Setelah diurutkan dari besar ke kecil, juara tertinggi otomatis duduk di kursi paling awal (`skor[0]`), dan nilai terkecil otomatis duduk di kursi paling ujung (`skor[n - 1]`)!
+
+---
+
+### 🔴 Pembahasan Array 3: Rekap 3 Nilai Ujian (Array 2D + Fungsi)
+
+#### 1. Apa yang Diinginkan Soal?
+* **Input:** Jumlah mahasiswa `n`, serta 3 nilai ujian (Tugas, UTS, UAS) untuk tiap mahasiswa.
+* **Proses:** Menyimpan data ke tabel 2 dimensi `nilai[MAKS][3]` (`baris` = orangnya, `kolom` = jenis ujiannya), lalu menghitung rata-rata tiap 1 baris ke dalam array 1 dimensi `rata[MAKS]`.
+* **Output:** Tabel rapi ke samping berisi Nomor Mahasiswa, nilai Tugas, UTS, UAS, dan Rata-ratanya.
+
+#### 2. Dekomposisi Masalah
+1. **Tabel Input 2D:** `int nilai[MAKS][3]` (kolom `0` = Tugas, kolom `1` = UTS, kolom `2` = UAS).
+2. **Loker Hasil 1D:** `float rata[MAKS]` (menyimpan 1 angka rata-rata untuk tiap mahasiswa).
+3. **2 Fungsi Pekerja:** Fungsi input tabel 2D dan fungsi `hitungRata`, ditambah pencetakan tabel sejajar.
+
+#### 3. Urutan Langkah yang Harus Dilakukan
+1. Deklarasikan fungsi di atas `main()`. Ingat: khusus parameter array 2D, ukuran kolom kanan wajib dicantumkan (`int nilai[][3]`).
+2. Pada fungsi input: gunakan perulangan baris `i` (`0` s/d `n - 1`), lalu baca ketiga kolomnya (`nilai[i][0]`, `nilai[i][1]`, `nilai[i][2]`).
+3. Pada fungsi `hitungRata`: untuk setiap baris mahasiswa `i` (`0` s/d `n - 1`), jumlahkan ketiga kolom pada baris `i` tersebut, bagi dengan **`3.0`**, lalu simpan ke `rata[i]`.
+4. Saat mencetak tabel: di dalam 1 putaran baris `i`, cetak nomor (`i + 1`), cetak ketiga kolom nilai ke samping, cetak `rata[i]`, **baru tekan Enter (`\n`) di paling ujung**!
+
+#### 4. Penjelasan Tiap Gerakan di Memori
+* **Gerakan Menjumlahkan Satu Baris (Jangan Tercampur Antar-Mahasiswa!):**
+  Jika kamu memakai variabel bantuan `totalBaris` di dalam `hitungRata`, pastikan kamu meletakkan `totalBaris = 0;` **di dalam perulangan baris `i`** (sehingga setiap pindah ke mahasiswa berikutnya, hitungan kembali mulai dari `0`). Atau lebih ringkas lagi: langsung jumlahkan ketiga kolom `(nilai[i][0] + nilai[i][1] + nilai[i][2]) / 3.0`.
+* **Gerakan Cetak Sejajar Seperti Mesin Ketik:**
+  Jangan menaruh `\n` saat mencetak nilai Tugas, UTS, dan UAS agar ketiganya berjejer ke kanan. Gunakan lebar kolom tetap (seperti `%6d` dan `%10.2f`) supaya kolomnya lurus rapi, lalu taruh `\n` hanya sekali di akhir baris `i`.
 
 ---
 
@@ -107,169 +108,155 @@ flowchart LR
 
 ---
 
-### 🟢 Pembahasan String 1: Validator Kekuatan Password Berlapis
+### 🟢 Pembahasan String 1: Pembuat Username & Cek Panjang Password
 
 #### 1. Apa yang Diinginkan Soal?
-* **Input:** `username`, lalu `password` yang diuji berulang kali sampai sah.
-* **Proses:** Memeriksa 4 aturan keamanan sekaligus menggunakan kombinasi `<string.h>` (`strlen`, `strcmpi`, `strchr`) dan penelusuran karakter, lalu melaporkan semua syarat yang gagal sebelum mengulang input.
-* **Output:** Daftar teguran spesifik jika password masih lemah, atau pesan sukses jika keempat syarat terpenuhi semua.
+* **Input:** Tiga buah kata tanpa spasi: `namaDepan`, `namaBelakang`, dan `password`.
+* **Proses:** Merakit string baru `username` dari gabungan nama depan + `"_"` + nama belakang, lalu mengukur panjang `password`.
+* **Output:** `username` hasil rakitan, jumlah huruf pada `password`, serta status diterima atau ditolak (minimal 6 karakter).
 
 #### 2. Dekomposisi Masalah
-Gunakan **sistem bendera (*flag* `0` atau `1`)** untuk memisahkan pengecekan tiap syarat agar mudah dilacak:
-1. Cek syarat panjang (`strlen >= 8`).
-2. Cek syarat kemiripan username (`strcmpi != 0`).
-3. Cek isi karakter dalam 1 kali *loop* menggunakan 4 bendera: `adaBesar`, `adaKecil`, `adaAngka`, `adaSimbol`.
-4. Keputusan akhir `do-while`: ulangi jika masih ada minimal 1 syarat yang gagal!
+1. **Perakitan `username`:** Menyalin kata dasar (`strcpy`), lalu menempelkan sambungan di belakangnya (`strcat`).
+2. **Pengukuran `password`:** Menghitung jumlah huruf (`strlen`) dan mengujinya dengan `if - else`.
 
 #### 3. Urutan Langkah yang Harus Dilakukan
-1. Sertakan `<stdio.h>` dan `<string.h>`. Siapkan `username[40]`, `password[40]`, dan variabel penentu `kuat` (`1` = lolos semua, `0` = masih gagal).
-2. Minta input `username` satu kali di luar `do-while`.
-3. Masuk ke blok `do { ... } while (kuat == 0);`:
-   * Anggap awalnya `kuat = 1;` (optimis lolos dulu), dan setel keempat bendera isi karakter (`adaBesar`, `adaKecil`, `adaAngka`, `adaSimbol`) semuanya ke **`0`**!
-   * Minta user menginput `password`.
-   * **Tes 1:** Jika `strlen(password) < 8`, cetak pesan kurang panjang dan ubah `kuat = 0`.
-   * **Tes 2:** Jika `strcmpi(password, username) == 0`, cetak pesan tidak boleh sama dengan username dan ubah `kuat = 0`.
-   * **Tes 3 & 4 (Sapuan Karakter):** Buat `for` dari `i = 0` sampai `< strlen(password)`:
-     * Jika huruf besar → `adaBesar = 1`
-     * Jika huruf kecil → `adaKecil = 1`
-     * Jika angka `'0'`–`'9'` → `adaAngka = 1`
-     * Jika karakter ditemukan di dalam daftar simbol menggunakan `strchr("!@#$%&*", password[i]) != NULL` → `adaSimbol = 1`
-   * Setelah *loop* sapuan selesai, cek masing-masing bendera yang masih bernilai `0`: cetak teguran spesifiknya dan ubah `kuat = 0`.
+1. Sertakan `#include <stdio.h>` dan `#include <string.h>`.
+2. Siapkan wadah `char namaDepan[25]`, `namaBelakang[25]`, `password[30]`, dan `username[55]` *(ukurannya dibuat lebih besar agar muat menampung gabungan keduanya!)*.
+3. Baca ketiga input memakai `scanf("%s", ...)` (ingat: nama array string pada `scanf` tidak memakai tanda `&`!).
+4. Rakit `username` dalam 3 gerakan berurutan:
+   * Salin `namaDepan` ke `username` memakai `strcpy`.
+   * Sambungkan `"_"` ke belakang `username` memakai `strcat`.
+   * Sambungkan `namaBelakang` ke belakang `username` memakai `strcat`.
+5. Simpan hasil `strlen(password)` ke variabel `panjang`, cetak hasilnya, lalu cek apakah `panjang < 6` atau `>= 6`.
 
 #### 4. Penjelasan Tiap Gerakan di Memori
-* **Gerakan Cerdik `strchr` untuk Mengecek Simbol:**
-  Daripada menulis `if (c == '!' || c == '@' || c == '#' || ...)` yang sangat panjang, kita manfaatkan fungsi `strchr(daftarSimbol, karakter)` dari `<string.h>`!
-  Cara kerjanya: kita bertanya, *"Apakah huruf `password[i]` ini ada di dalam teks `"!@#$%&*"`?"* Jika **tidak ada**, `strchr` menghasilkan `NULL`. Jadi jika hasilnya **`!= NULL`**, berarti karakter itu resmi termasuk simbol yang diakui!
-* **Gerakan Wajib Reset Bendera di Awal `do-while`:**
-  Mengapa `kuat = 1` dan keempat bendera `ada... = 0` wajib ditaruh **di dalam `do` bagian paling atas**? Supaya saat user gagal di percobaan pertama lalu mengetik password kedua, hasil catatan dari password lama sudah bersih kembali!
+* **Gerakan Mengapa Awalnya Wajib `strcpy`, Bukan Langsung `strcat`?**
+  Wadah `username[55]` yang baru dibuat masih berisi karakter acak memori. Fungsi `strcat` bekerja dengan mencari tanda penutup `'\0'` lalu menempelkan huruf di belakangnya—jika awalnya belum ada `'\0'` yang benar, hasilnya akan kacau! Maka gerakan pertama **wajib memakai `strcpy`** untuk menaruh `namaDepan` sekaligus memasang `'\0'` pertamanya dengan bersih, barulah disusul `strcat`.
 
 ---
 
-### 🟡 Pembahasan String 2: Detektor *Kalimat* Palindrom (`fgets` & Fungsi)
+### 🟡 Pembahasan String 2: Simulasi Login Akun (`strcmp` & `strcmpi`)
 
 #### 1. Apa yang Diinginkan Soal?
-* **Input:** Satu kalimat utuh lengkap dengan spasi dan tanda baca (misal `"Ibu Ratna, antar ubi!"`).
-* **Proses:** Membuang semua pengganggu (spasi, koma, tanda seru, Enter `\n`) dan mengecilkan semua huruf ke dalam wadah `bersih[]`, lalu memeriksa kesimetrisan huruf ujung kiri vs ujung kanan.
-* **Output:** Kalimat yang sudah disaring bersih, panjang huruf bersihnya, dan kesimpulan Palindrom / Bukan.
+* **Input:** Melanjutkan data `username` dan `password` dari Soal String 1, ditambah input baru `inputUser` dan `inputPass`.
+* **Proses:** Membandingkan `inputUser` tanpa peduli huruf besar/kecil (`strcmpi`), dan membandingkan `inputPass` secara ketat (`strcmp`).
+* **Output:** Salah satu dari 3 pesan spesifik: Login Berhasil, Username tidak ditemukan, atau Password salah.
 
 #### 2. Dekomposisi Masalah
-1. **Fungsi Penyaring (`saringHuruf`):** Menggunakan **dua jari indeks yang kecepatannya berbeda** (`i` untuk membaca `asli`, `k` untuk mengisi `bersih`).
-2. **Fungsi Pemeriksa (`cekPalindrom`):** Menggunakan **dua jari yang bergerak saling mendekat dari ujung kiri dan ujung kanan** menuju ke tengah.
+Gunakan **percabangan bertingkat (`if - else if - else`)** layaknya 2 pintu penjagaan:
+* **Pintu 1:** Cek apakah username-nya terdaftar (`strcmpi`).
+* **Pintu 2:** Jika username benar, baru cek apakah password-nya tepat (`strcmp`).
 
 #### 3. Urutan Langkah yang Harus Dilakukan
-1. Baca kalimat di `main()` memakai `fgets(kalimat, sizeof(kalimat), stdin);`.
-2. Di dalam fungsi `saringHuruf(asli, bersih)`:
-   * Siapkan indeks penulis `k = 0`.
-   * Telusuri `asli[i]` dari `0` sampai `< strlen(asli)`:
-     * Jika `asli[i]` adalah huruf kapital (`'A'`–`'Z'`), masukkan versi kecilnya (`asli[i] + 32`) ke `bersih[k]`, lalu majukan `k++`.
-     * Jika `asli[i]` sudah huruf kecil (`'a'`–`'z'`) atau angka (`'0'`–`'9'`), langsung salin ke `bersih[k]`, lalu majukan `k++`.
-     * Selain itu (spasi, koma, titik, tanda seru, maupun `\n` dari `fgets`) **diabaikan saja** (`k` tidak maju!).
-   * Pasang penutup `'\0'` pada `bersih[k]`.
-3. Di dalam fungsi `cekPalindrom(bersih)`:
-   * Ambil `pjg = strlen(bersih)`.
-   * Pasang jari `kiri = 0` dan jari `kanan = pjg - 1`.
-   * Selama `kiri < kanan`: bandingkan `bersih[kiri]` dengan `bersih[kanan]`. Jika berbeda, langsung `return 0;`! Jika sama, geser `kiri++` dan `kanan--`.
-   * Jika kedua jari bertemu di tengah tanpa pernah berbeda, `return 1;`.
+1. Tambahkan variabel `char inputUser[55]` dan `inputPass[30]` pada program Soal String 1 (jalankan sesi login hanya jika password saat registrasi tadi sudah memenuhi syarat `>= 6` karakter).
+2. Minta user menginput `inputUser` dan `inputPass`.
+3. Buat pemeriksaan berlapis:
+   * **Cek Pertama:** Apakah `strcmpi(inputUser, username)` **tidak sama dengan `0`**? Jika ya (`!= 0`), langsung tampilkan `"Username tidak ditemukan!"`.
+   * **Cek Kedua (`else if`):** Apakah `strcmp(inputPass, password)` **sama dengan `0`**? Jika ya (`== 0`), tampilkan `"Login Berhasil!"`.
+   * **Sisanya (`else`):** Berarti username-nya benar tetapi password-nya berbeda → tampilkan `"Password salah!"`.
 
 #### 4. Penjelasan Tiap Gerakan di Memori
-* **Gerakan Dua Indeks Berbeda Kecepatan (`i` dan `k` pada `saringHuruf`):**
-  Mengapa kita tidak bisa menulis `bersih[i] = asli[i]`? Karena saat `asli[3]` berisi spasi `' '` dan kita lewati, loker `bersih[3]` akan bolong kosong! Maka `i` bertugas jalan terus memeriksa semua karakter `asli` tanpa henti, sedangkan `k` **hanya melangkah maju (`k++`) setiap kali ada huruf/angka sah yang berhasil masuk** ke `bersih`. Dan otomatis di akhir, `bersih[k] = '\0'` menutup rapat hasil saringannya (sekaligus membuang `\n` bawaan `fgets` karena `\n` bukan huruf/angka!).
-* **Gerakan Jari `kiri` & `kanan` Bertemu di Tengah:**
-  Cara ini jauh lebih hemat daripada harus membuat array ketiga untuk membalik kalimat! Cukup adu ujung paling kiri (`0`) dengan ujung paling kanan (`pjg - 1`), lalu keduanya melangkah 1 kotak ke dalam (`kiri++`, `kanan--`) sampai bertemu di tengah.
+
+> [!IMPORTANT]
+> **Jebakan Terbesar Pemula pada `strcmp` dan `strcmpi`:**
+> Fungsi pembanding string di C bekerja dengan mengurangi kode ASCII huruf pertama dan kedua (mencari **selisihnya**). Jika kedua kata **sama persis**, maka selisihnya adalah **`0`**!
+> Jadi:
+> * `strcmp(a, b) == 0` artinya **SAMA / COCOK**.
+> * `strcmp(a, b) != 0` artinya **BERBEDA / TIDAK COCOK**.
 
 ---
 
-### 🔴 Pembahasan String 3: Sensor Kata Terlarang pada Kalimat Chat
+### 🔴 Pembahasan String 3: Hitung Huruf Vokal & Cek Kata Palindrom
 
 #### 1. Apa yang Diinginkan Soal?
-* **Input:** Sebuah kalimat pesan panjang ber-spasi (`pesan`) dan 1 kata kunci yang dilarang (`terlarang`).
-* **Proses:** Memotong-motong kalimat menjadi per kata setiap bertemu spasi, membandingkan tiap potongan kata dengan `terlarang` secara *non-case-sensitive* (`strcmpi`), menyensornya menjadi deretan `'*'` jika cocok, dan merakitnya kembali ke kalimat hasil.
-* **Output:** Kalimat utuh yang kata terlarangnya sudah berubah menjadi bintang `*****`, serta total berapa kali sensor bekerja.
+* **Input:** Sebuah kata tanpa spasi (bisa bercampur huruf kapital dan kecil, misal `"Malam"`).
+* **Proses:** Menghitung banyak huruf vokalnya di fungsi pertama, membuat salinan terbaliknya di fungsi kedua, lalu mengadu kata asli vs kata balikan menggunakan `strcmpi`.
+* **Output:** Jumlah huruf vokal, wujud kata setelah dibalik, dan status Palindrom / Bukan.
 
 #### 2. Dekomposisi Masalah
-Masalah utamanya: fungsi `strcmpi` hanya bisa membandingkan **1 kata utuh dengan 1 kata utuh**, tidak bisa langsung membandingkan 1 kalimat panjang dengan 1 kata!
-Maka dekomposisinya adalah:
-1. **Pembersihan Ekor `fgets`:** Membuang `'\n'` di ujung `pesan` terlebih dahulu.
-2. **Mesin Pemotong Kata (`kataSementara`):** Mengumpulkan huruf demi huruf ke wadah kecil `kataSementara` sampai menabrak spasi `' '` atau akhir kalimat `'\0'`.
-3. **Meja Pemeriksaan & Perakitan (`hasilSensor`):** Menguji `kataSementara` dengan `strcmpi`, mengubahnya jadi `'*'` bila terlarang, lalu menempelkannya ke `hasilSensor` menggunakan `strcat`.
+1. **Fungsi 1 (`hitungVokal`):** Menyusuri huruf satu per satu dan mencocokkannya dengan daftar `"aiueoAIUEO"`.
+2. **Fungsi 2 (`balikKata`):** Menyalin huruf dari ujung belakang `asal` ke ujung depan `hasil`, lalu menguncinya dengan `'\0'`.
+3. **Keputusan di `main()`:** Memanfaatkan `strcmpi` agar `"Malam"` dan `"malaM"` langsung terbaca sama tanpa perlu repot mengubah huruf besar/kecil secara manual!
 
 #### 3. Urutan Langkah yang Harus Dilakukan
-1. Baca `pesan` dengan `fgets`, lalu bersihkan `'\n'` di ujungnya: cek panjang `len = strlen(pesan)`, jika `pesan[len - 1] == '\n'`, timpa menjadi `'\0'`.
-2. Baca kata `terlarang` dengan `scanf("%s", terlarang);`.
-3. Di dalam fungsi sensor:
-   * Siapkan string tujuan `hasil[200] = "";` *(wajib diinisialisasi string kosong `""` di awal agar `strcat` tahu posisi awalnya!)*, wadah penampung 1 kata `kata[50]`, indeks pengumpul huruf `k = 0`, dan penghitung `jumlahSensor = 0`.
-   * Telusuri `pesan[i]` dari `i = 0` sampai **`i <= strlen(pesan)`** *(perhatikan pakai `<=` supaya karakter `'\0'` paling ujung ikut memicu pemrosesan kata terakhir!)*:
-     * **Jika `pesan[i]` BUKAN spasi `' '` DAN BUKAN `'\0'`:** masukkan huruf itu ke `kata[k]`, lalu `k++`.
-     * **Jika `pesan[i]` ADALAH spasi `' '` ATAU `'\0'`:** artinya **1 kata baru saja selesai terkumpul**!
-       1. Tutup `kata[k] = '\0';`.
-       2. Cek dengan `strcmpi(kata, terlarang) == 0`: jika cocok, naikkan `jumlahSensor++`, lalu timpa semua huruf di `kata` (`0` s/d `strlen(kata) - 1`) menjadi karakter `'*'`.
-       3. Tempelkan `kata` ke `hasil` menggunakan `strcat(hasil, kata);`.
-       4. Jika pemicunya tadi adalah spasi (`pesan[i] == ' '`), tempelkan juga `" "` ke `hasil` dengan `strcat(hasil, " ");`.
-       5. Reset kembali `k = 0;` untuk bersiap menampung kata berikutnya!
+1. Siapkan `char kata[50]` dan `char terbalik[50]` di `main()`, lalu baca `kata` dengan `scanf("%s", kata)`.
+2. Pada fungsi `hitungVokal(char kata[])`:
+   * Siapkan penghitung `jml = 0`, dan ambil panjang kata `pjg = strlen(kata)`.
+   * Ulangi `i` dari `0` sampai `< pjg`: cek apakah huruf `kata[i]` ada di dalam daftar vokal menggunakan `strchr("aiueoAIUEO", kata[i]) != NULL`. Jika ada, tambah `jml++`.
+   * Kembalikan nilai `jml` dengan `return jml;`.
+3. Pada fungsi `balikKata(char asal[], char hasil[])`:
+   * Ambil `pjg = strlen(asal)`.
+   * Ulangi `i` dari `0` sampai `< pjg`: isi `hasil[i]` dengan huruf dari belakang `asal`, yaitu `asal[pjg - 1 - i]`.
+   * **Langkah wajib terakhir:** isi `hasil[pjg] = '\0';`!
+4. Di `main()`, panggil kedua fungsi, tampilkan hasilnya, lalu cek `if (strcmpi(kata, terbalik) == 0)` untuk mencetak kesimpulan Palindrom!
 
 #### 4. Penjelasan Tiap Gerakan di Memori
-* **Gerakan Memotong Ekor Enter `fgets` dengan `strlen`:**
-  Saat user mengetik kalimat lalu menekan Enter, `fgets` menyimpan `'\n'` tepat sebelum `'\0'`. Jika tidak dibuang dulu, kata paling terakhir di dalam kalimat akan ketempelan `'\n'` (misal `"ini\n"`), sehingga gagal dicocokkan oleh `strcmpi`! Mengubah `pesan[len - 1] = '\0'` memotong bersih sisa Enter tersebut.
-* **Gerakan Mengapa Loop Berjalan Sampai `<= strlen(pesan)`:**
-  Kata pertama, kedua, dst. dipisahkan oleh spasi `' '`. Tapi setelah **kata paling terakhir**, tidak ada spasi lagi—adanya langsung `'\0'`! Dengan menjalankan `i` sampai menyentuh indeks `'\0'` (`i <= panjang`), kata terakhir di ujung kalimat tetap ikut terproses sebelum *loop* selesai.
+* **Gerakan Cerdik `strchr` untuk Mengecek 10 Huruf Vokal Sekaligus:**
+  Daripada menulis `if` dengan 10 syarat `||` (`'a'`, `'i'`, ..., `'O'`), fungsi `strchr("aiueoAIUEO", kata[i])` langsung mencarikan apakah karakter `kata[i]` termasuk salah satu dari 10 huruf tersebut. Jika ditemukan, hasilnya bukan `NULL` (`!= NULL`)!
+* **Gerakan Silang Indeks `pjg - 1 - i` & Segel `'\0'`:**
+  Misalkan `"Malam"` memiliki `pjg = 5` (indeks hurufnya `0` s/d `4`):
+  * Saat `i = 0`, `hasil[0]` mengambil `asal[5 - 1 - 0]` = `asal[4]` (`'m'`).
+  * Saat `i = 4`, `hasil[4]` mengambil `asal[5 - 1 - 4]` = `asal[0]` (`'M'`).
+  * Karena kita merakit `hasil[]` huruf demi huruf sendiri, bahasa C **tidak otomatis** menaruh penutup `'\0'`. Maka wajib pasang `hasil[pjg] = '\0';` di akhir fungsi agar tidak muncul simbol sampah di belakang kata!
 
 ---
 
 ## Bagian C: Pembahasan Tantangan Puncak (SOAL HOTS)
 
-### 🔥 Studi Kasus: Sistem Peringkat, Predikat, & Pencarian Nama Lengkap Mahasiswa
+### 🔥 Studi Kasus: Papan Peringkat & Pencarian Nilai Mahasiswa
 
 #### 1. Apa yang Diinginkan Soal?
-* **Input:** Jumlah `n`, lalu secara bergantian untuk tiap mahasiswa: **Nama Lengkap ber-spasi** (`fgets`) dan **3 angka nilai ujian** (`scanf`), ditutup dengan input **Nama Lengkap yang ingin dicari** di akhir.
-* **Proses:** Mengelola **4 array paralel** (`nama`, `nilai`, `rata`, `predikat`), memberi label predikat otomatis dengan `strcpy`, mengurutkan keempatnya serentak berdasarkan rata-rata menurun + *tie-breaker* abjad Nama Lengkap (`strcmpi`), lalu melakukan pencarian *non-case-sensitive*.
-* **Output:** Tabel peringkat lengkap 7 kolom yang lurus rapi, diikuti hasil pelacakan nama mahasiswa.
+* **Input:** Jumlah mahasiswa `n`, diikuti pasangan `nama` panggilan dan `nilai` ujian masing-masing, lalu di akhir 1 nama mahasiswa yang ingin dicari.
+* **Proses:** Menyimpan data pada **2 array paralel** (`nama` dan `nilai`), mengurutkannya dari nilai tertinggi ke terendah sambil menjaga agar pasangan nama & nilai pindah bersama-sama, lalu mencari nama secara *non-case-sensitive*.
+* **Output:** Tabel Peringkat `1..n` yang sudah urut, diikuti hasil pencarian posisi peringkat dan nilai mahasiswa yang dicari.
 
-#### 2. Dekomposisi Masalah (4 Array Paralel yang Terikat Indeks `i`)
+#### 2. Dekomposisi Masalah (Konsep "2 Loker Berdampingan")
+
+Bayangkan setiap nomor indeks **`i`** memegang sepasang loker milik 1 mahasiswa yang tidak boleh terpisah:
 
 ```mermaid
 flowchart LR
-    I["Indeks Baris ke-i"]
-    I --> T1["nama[i] : char[40] (Nama Lengkap)"]
-    I --> T2["nilai[i][0..2] : int[3] (Bhs, Mat, Dig)"]
-    I --> T3["rata[i] : float (Rata-rata)"]
-    I --> T4["predikat[i] : char[15] (Cumlaude/Lulus/Remedial)"]
+    I["Indeks ke-i (Mahasiswa ke-i)"]
+    I --> N["Loker Kiri: nama[i] (String maks 30 huruf)"]
+    I --> V["Loker Kanan: nilai[i] (Angka int)"]
 ```
 
-Pecah pengerjaan menjadi **4 fungsi bersih**:
-1. **Fungsi Input & Penentu Predikat**
-2. **Fungsi Urut Paralel + Tie-Breaker**
-3. **Fungsi Cetak Tabel Rapi**
-4. **Fungsi Pencarian Nama Lengkap**
+Pecah program menjadi **3 bagian rapi**:
+1. **Fungsi Input Data:** Mengisi pasangan `nama[i]` dan `nilai[i]`.
+2. **Fungsi Urut Paralel:** Mengurutkan `nilai` menurun, di mana setiap kali angka ditukar, string `nama` juga ikut ditukar memakai `strcpy`.
+3. **Fungsi Tampil & Cari:** Mencetak tabel peringkat, lalu menyusuri `nama` menggunakan `strcmpi` dan bendera penanda `ketemu`.
 
 #### 3. Urutan Langkah yang Harus Dilakukan
-1. Siapkan `#include <stdio.h>` dan `#include <string.h>`, serta `#define MAKS 20`.
-2. Deklarasikan keempat array paralel di `main()`, minta input `n` dengan `scanf`.
-3. **Di Fungsi Input (Ulangi `i` dari `0` s/d `n - 1`):**
-   * Bersihkan sisa tombol Enter dari `scanf` sebelumnya menggunakan `getchar();`!
-   * Baca Nama Lengkap dengan `fgets(nama[i], 40, stdin);`, lalu potong `'\n'` di ujung `nama[i]` memakai `strlen(nama[i])`.
-   * Baca 3 nilai `nilai[i][0..2]` dengan `scanf`, hitung rata-ratanya ke `rata[i]`.
-   * Gunakan `if - else if - else` pada `rata[i]` untuk mengisi `predikat[i]` memakai `strcpy` (`"Cumlaude"`, `"Lulus"`, atau `"Remedial"`).
-4. **Di Fungsi Pengurutan Paralel (`i` dari `0..n-2`, `j` dari `i+1..n-1`):**
-   * Cek syarat tukar gabungan: apakah `rata[i] < rata[j]` **ATAU** (`rata[i] == rata[j]` **DAN** `strcmpi(nama[i], nama[j]) > 0`)?
-   * Jika ya, tukar serentak **keempat komponen**: `rata`, `nama` (pakai `strcpy`), `predikat` (pakai `strcpy`), dan ketiga kolom `nilai` (pakai `for k = 0..2`).
-5. **Di Fungsi Tampil:** Gunakan format rata kiri untuk teks (`%-18s`) dan rata kanan lebar tetap untuk angka (`%5d`, `%7.2f`) agar tabel lurus sempurna walaupun panjang nama tiap mahasiswa berbeda-beda!
-6. **Di Fungsi Cari:** Bersihkan sisa Enter lagi dengan `getchar()`, baca `namaCari` dengan `fgets` (potong `'\n'`-nya!), lalu cari dengan bendera `ketemu` dan `strcmpi(nama[i], namaCari) == 0`.
+1. Sertakan `<stdio.h>` dan `<string.h>`, serta pasang `#define MAKS 20`.
+2. Di `main()`, siapkan `char nama[MAKS][30]`, `int nilai[MAKS]`, `int n`, dan `char dicari[30]`.
+3. **Tahap Input (`i` dari `0` s/d `n - 1`):**
+   * Baca nama panggilan dengan `scanf("%s", nama[i]);` *(cukup tulis 1 kurung siku `nama[i]`!)*.
+   * Baca nilainya dengan `scanf("%d", &nilai[i]);` *(untuk `int` tetap wajib pakai `&`!)*.
+4. **Tahap Pengurutan Paralel (`i` dari `0` s/d `n - 2`, `j` dari `i + 1` s/d `n - 1`):**
+   * Cek apakah nilai di depan kalah besar dari nilai di belakang (`if (nilai[i] < nilai[j])`).
+   * Jika ya, lakukan **2 penukaran sekaligus** di dalam kurung kurawal `if`:
+     1. Tukar `nilai[i]` dengan `nilai[j]` menggunakan `int tempNilai`.
+     2. Tukar `nama[i]` dengan `nama[j]` menggunakan `char tempNama[30]` dan **3 baris `strcpy`**.
+5. **Tahap Tampil Tabel:** Ulangi `i` dari `0` s/d `n - 1`, cetak `i + 1` (sebagai nomor Peringkat), `nama[i]` (gunakan `%-14s` agar rata kiri lurus), dan `nilai[i]`.
+6. **Tahap Pencarian Nama:**
+   * Minta input `scanf("%s", dicari);`.
+   * Siapkan penanda `int ketemu = 0;`.
+   * Ulangi `i` dari `0` s/d `n - 1`: jika `strcmpi(nama[i], dicari) == 0`, cetak bahwa mahasiswa ditemukan di Peringkat `i + 1` dengan `nilai[i]`, ubah `ketemu = 1;`, lalu hentikan *loop* dengan `break;`.
+   * Di luar *loop*, cek `if (ketemu == 0)`: cetak `"Mahasiswa tidak ditemukan."`.
 
 #### 4. Penjelasan Tiap Gerakan Kritis (Kunci Menaklukkan HOTS!)
 
-> [!CAUTION]
-> **Gerakan 1 — Jebakan Maut Mencampur `scanf` dan `fgets` (`getchar()`):**
-> Ini adalah jebakan nomor 1 di bahasa C saat menggabungkan angka dan kalimat!
-> Setiap kali user mengetik angka di `scanf` lalu menekan **Enter**, `scanf` hanya mengambil angkanya saja dan **meninggalkan karakter `'\n'` mengambang di antrean keyboard**. Saat baris berikutnya memanggil `fgets` untuk meminta Nama Lengkap, `fgets` mengira user sudah menekan Enter sehingga pertanyaan nama **langsung terlewat kosong**!
-> * **Gerakan Penyelamat:** Setiap kali akan memanggil `fgets` sesudah `scanf`, panggil dulu `getchar();` satu kali untuk "memakan/membuang" sisa tombol Enter tersebut!
+* **Gerakan 1 — Cara Memakai `char nama[MAKS][30]`:**
+  Jangan bingung melihat dua kurung siku! Kurung pertama `[MAKS]` adalah **nomor urut mahasiswanya**, sedangkan kurung kedua `[30]` adalah kapasitas huruf namanya. Jadi setiap kali kamu menulis **`nama[i]`** (hanya 1 kurung siku), itu sudah mewakili **1 kata string nama milik mahasiswa ke-`i`**—persis seperti variabel string biasa!
 
-* **Gerakan 2 — Mengisi Predikat dengan `strcpy`:**
-  Ingat bahwa `predikat[i]` adalah sebuah string (`char[15]`), sehingga kamu **tidak boleh** menulis `predikat[i] = "Cumlaude";`. Gunakan `strcpy(predikat[i], "Cumlaude");`.
+* **Gerakan 2 — Mengapa Nama Wajib Ikut Ditukar Pakai `strcpy`?**
+  Bayangkan awalnya `nama[0] = "Ahmad"` (`nilai[0] = 85`) dan `nama[2] = "Edi"` (`nilai[2] = 92`).
+  Jika saat `85 < 92` kamu hanya menukar angkanya saja menjadi `nilai[0] = 92`, maka komputer akan mengira **Ahmad yang mendapat nilai 92**!
+  Supaya pemiliknya tetap benar, begitu angkanya ditukar, namanya juga harus ikut bertukar kursi. Dan karena string **dilarang memakai tanda `=`**, penukaran nama wajib menggunakan pola 3 gelas versi `strcpy`:
+  1. Salin `nama[i]` ke `tempNama`.
+  2. Salin `nama[j]` ke `nama[i]`.
+  3. Salin `tempNama` ke `nama[j]`.
 
-* **Gerakan 3 — Menjaga Tabel Tetap Lurus Saat Panjang Nama Berbeda (`%-18s`):**
-  Nama `"Edi"` hanya 3 huruf, sedangkan `"Adang Pratama"` 13 huruf. Jika kamu memakai `\t` (Tab), kolom nilai di sebelah kanannya pasti akan terdorong miring-miring!
-  * **Trik Perapi Profesional:** Gunakan `%-18s` pada `printf`! Tanda minus `-` artinya **rata kiri**, dan angka `18` artinya setiap nama diberi jatah ruangan tetap selebar **18 karakter** (sisanya otomatis diisi spasi oleh C). Hasilnya, semua kolom angka di sebelah kanannya akan berbaris lurus seperti tabel Excel!
-
-* **Gerakan 4 — Penukaran 4 Paket Sekaligus + Tie-Breaker:**
-  Saat `Adang Pratama` (`73.33`) berada di bawah `Budi Santoso` (`73.33`), syarat pertama (`rata[i] < rata[j]`) bernilai salah karena nilainya seri. Namun karena dihubungkan operator `||`, komputer mengecek pintu kedua: `rata[i] == rata[j]` (benar!) **DAN** `strcmpi("Budi Santoso", "Adang Pratama") > 0` (benar, karena `'B' > 'A'`). Maka keduanya bertukar kursi beserta ke-3 nilai ujian dan predikatnya masing-masing!
-
+* **Gerakan 3 — Mengapa Pesan `"Tidak ditemukan"` Ditaruh di Luar Loop (`ketemu == 0`)?**
+  Jika kamu menaruh `else printf("Tidak ditemukan");` di dalam `for`, maka saat mencari `"Ahmad"` (yang ada di kursi ke-2), begitu komputer baru memeriksa kursi ke-1 (`"Edi"`) dan melihat namanya beda, ia sudah terlanjur mencetak `"Tidak ditemukan"`!
+  Dengan teknik bendera `ketemu = 0`, komputer diam dulu memeriksa seluruh kursi sampai habis. Hanya jika setelah seluruh kursi diperiksa bendera `ketemu` masih tetap `0`, barulah kita yakin 100% orangnya memang tidak ada di dalam daftar!
