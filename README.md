@@ -1,6 +1,6 @@
 # Modul Belajar Mandiri: Array & String (Bahasa C)
 
-Repositori ini berisi paket belajar mandiri bertahap untuk menguasai materi **Array (1D, 2D, Fungsi, Sorting)** dan **String (<string.h>, Manipulasi Teks)** pada Bahasa C hingga soal gabungan (**HOTS**) dengan tingkat kesulitan yang ramah bagi pemula.
+Repositori ini berisi paket belajar mandiri bertahap untuk menguasai materi **Array (1D, 2D, Fungsi, Sorting)** dan **String (<string.h>, Manipulasi Teks)** pada Bahasa C mulai dari level pemula hingga tantangan lanjut (**HOTS**).
 
 ## Urutan Belajar yang Disarankan
 
@@ -12,3 +12,5 @@ Repositori ini berisi paket belajar mandiri bertahap untuk menguasai materi **Ar
    Berisi 3 soal bertingkat **Array**, 3 soal bertingkat **String** (<string.h>), dan **1 Soal Puncak HOTS** gabungan Array & String beserta contoh eksekusi input–output.
 4. **[Panduan Penyelesaian: Dekomposisi & Penjelasan Tiap Gerakan](./panduan_penyelesaian_dekomposisi.md)**
    Pendamping berpikir tanpa membocorkan kode jadi: membedah keinginan soal, memecah masalah (*dekomposisi*), menyusun langkah kerja, dan menjelaskan apa yang terjadi di memori pada setiap gerakan.
+5. **[Soal Tantangan / Level Up (Ekstra)](./soal_tantangan_array_string.md)**
+   Kumpulan soal tantangan tingkat lanjut setara ujian praktikum bagi yang sudah menyelesaikan lembar latihan utama.
